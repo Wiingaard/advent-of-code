@@ -1,8 +1,6 @@
-# Advent of Code 2022
+# Advent of Code 2022 🎅
 
-## Hey 👋
-
-I'll attempt to solve the Advent of Code 2022 by using [Swift](https://www.swift.org/)
+I'll attempt to solve the [Advent of Code 2022](https://adventofcode.com/2022) by using [Swift](https://www.swift.org/)
 
 To get started using Swift is easy. We all have it preinstalled on out mac computers, so no initial setup is needed.
 
