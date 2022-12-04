@@ -1,20 +1,29 @@
+import Parsing
+
 @main
 public struct CampCleanup {
     
     public static func main() {
-        let pairs = input
-            .components(separatedBy: "\n")
-            .map(Pair.init)
         
-        let part1Solution = pairs.filter { $0.isOneRangeFullyCovered }.count
+        let pairs = try! Many {
+            Pair.parser
+        } separator: {
+            "\n"
+        }.parse(input)
+        
+        let part1Solution = pairs
+            .filter { $0.isOneRangeFullyCovered }
+            .count
         
         print("Part 1 solution: \(part1Solution)")
         
-        let part2Solution = pairs.filter { $0.isRangesOverlapping }.count
+        let part2Solution = pairs
+            .filter { $0.isRangesOverlapping }
+            .count
         
         print("Part 2 solution: \(part2Solution)")
-        
     }
+    
 }
 
 struct Pair {
@@ -29,10 +38,10 @@ struct Pair {
         !left.range.isDisjoint(with: right.range)
     }
     
-    init(_ input: String) {
-        let parts = input.components(separatedBy: ",")
-        left = SectionRange(parts[0])
-        right = SectionRange(parts[1])
+    static let parser = Parse(Pair.init) {
+        SectionRange.parser
+        ","
+        SectionRange.parser
     }
 }
 
@@ -44,9 +53,9 @@ struct SectionRange {
         Set(beginIndex...endIndex)
     }
     
-    init(_ input: String) {
-        let parts = input.components(separatedBy: "-")
-        beginIndex = Int(parts[0])!
-        endIndex = Int(parts[1])!
+    static let parser = Parse(SectionRange.init) {
+        Int.parser()
+        "-"
+        Int.parser()
     }
 }
