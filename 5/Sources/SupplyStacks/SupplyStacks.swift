@@ -4,17 +4,6 @@ import Parsing
 @main
 public struct SupplyStacks {
     
-    /**
-     NOTICE
-     I ended up not solving this pussle!
-     There's some raceissue in the way the crane is popping and pushing elements.
-     The final outcome is not deterministic.
-     If I had more time, I would have re-write it into not using a `var stacks`, but instead
-     reduce into an immutable stacks object. Also, not use an Dictionary, but two-dimentional array instead.
-     I also tried with a dispatch quere instead of BlockOperation.
-     
-     Edit: I forgot to sorte the final dictionary before printing it 🤦‍♂️
-     */
     public static func main() async {
         
         let instructions = try! Many {
@@ -24,22 +13,27 @@ public struct SupplyStacks {
         }.parse(instructionsInput)
         
         
-        let crane = Crane()
-        
+        var crane = Crane(model: .part1)
         crane.run(instructions)
+        crane.printTopCrates()
         
-        print("Done:", crane.stacks)
-        
-        let lastElements = crane.stacks
-            .sorted { $0.key < $1.key }
-            .map { String($1.last ?? "_") }
-            .joined()
-        
-        print("Last elements:", lastElements) // RFFFWBPNS -> RFFFWBPNS
+        crane = Crane(model: .part2)
+        crane.run(instructions)
+        crane.printTopCrates()
     }
 }
 
 class Crane {
+    enum Model {
+        case part1
+        case part2
+    }
+    
+    let model: Model
+    
+    init(model: Model) {
+        self.model = model
+    }
     
     var stacks: Dictionary<Int, [Character]> = [
         1: ["D", "Z", "T", "H"].reversed(),
@@ -55,15 +49,19 @@ class Crane {
     
     func run(_ instructions: [InstructionSet]) {
         for set in instructions {
-            moveMultiple(set)
+            switch model {
+            case .part1:
+                for _ in 1...set.count {
+                    self.move(from: set.from, to: set.to)
+                }
+            case .part2:
+                moveMultiple(set)
+            }
         }
     }
     
     private func move(from: Int, to: Int) {
-        guard let elementToMove = self.stacks[from]?.popLast() else {
-            fatalError("No element found")
-        }
-        print("Move: ", elementToMove, "to:", to)
+        let elementToMove = self.stacks[from]!.popLast()!
         self.stacks[to]?.append(elementToMove)
     }
     
@@ -77,6 +75,14 @@ class Crane {
         }
         
         self.stacks[set.to]!.append(contentsOf: _elements.reversed())
+    }
+    
+    func printTopCrates() {
+        let lastElements = stacks
+            .sorted { $0.key < $1.key }
+            .map { String($1.last ?? "_") }
+            .joined()
+        print("Crane model from \(model):", lastElements)
     }
 }
 
