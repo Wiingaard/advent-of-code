@@ -55,9 +55,7 @@ class Crane {
     
     func run(_ instructions: [InstructionSet]) {
         for set in instructions {
-            for _ in 1...set.count {
-                self.move(from: set.from, to: set.to)
-            }
+            moveMultiple(set)
         }
     }
     
@@ -67,6 +65,18 @@ class Crane {
         }
         print("Move: ", elementToMove, "to:", to)
         self.stacks[to]?.append(elementToMove)
+    }
+    
+    private func moveMultiple(_ set: InstructionSet) {
+        func pop() -> Character {
+            return self.stacks[set.from]!.popLast()!
+        }
+        var _elements: [Character] = []
+        for _ in 1...set.count {
+            _elements.append(pop())
+        }
+        
+        self.stacks[set.to]!.append(contentsOf: _elements.reversed())
     }
 }
 
