@@ -12,6 +12,8 @@ public struct SupplyStacks {
      If I had more time, I would have re-write it into not using a `var stacks`, but instead
      reduce into an immutable stacks object. Also, not use an Dictionary, but two-dimentional array instead.
      I also tried with a dispatch quere instead of BlockOperation.
+     
+     Edit: I forgot to sorte the final dictionary before printing it 🤦‍♂️
      */
     public static func main() async {
         
@@ -28,11 +30,12 @@ public struct SupplyStacks {
         
         print("Done:", crane.stacks)
         
-        let lastElements = crane.stacks.map { (_, value) in
-            String(value.last ?? "_")
-        }.joined()
+        let lastElements = crane.stacks
+            .sorted { $0.key < $1.key }
+            .map { String($1.last ?? "_") }
+            .joined()
         
-        print("Last elements:", lastElements) // SFPRBFFWN new FWPFRBSFN
+        print("Last elements:", lastElements) // RFFFWBPNS -> RFFFWBPNS
     }
 }
 
@@ -51,17 +54,11 @@ class Crane {
     ]
     
     func run(_ instructions: [InstructionSet]) {
-        let queue = BlockOperation.init()
-        
         for set in instructions {
             for _ in 1...set.count {
-                queue.addExecutionBlock {
-                    self.move(from: set.from, to: set.to)
-                }
+                self.move(from: set.from, to: set.to)
             }
         }
-        
-        queue.start()
     }
     
     private func move(from: Int, to: Int) {
