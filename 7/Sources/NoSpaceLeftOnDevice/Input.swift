@@ -7,7 +7,7 @@
 
 import Foundation
 
-let log = """
+let logList = """
 $ cd /
 $ ls
 dir dpllhlcv
