@@ -1,0 +1,78 @@
+# Cursor Rules for Advent of Code 2025
+
+## Project Context
+This is an Advent of Code 2025 repository with Swift solutions. Each day has its own directory with input files, puzzle descriptions, and solution scripts.
+
+## File Structure
+- Root: Utility scripts (`aoc.swift`, `download-input.swift`)
+- `day<XX>/`: Day-specific files (input, puzzle, solutions)
+- Documentation: `METHODOLOGY.md` (comprehensive), `QUICK_START.md` (quick reference)
+
+## Workflow Guidelines
+
+### When Solving a New Day:
+1. Download input and puzzle using the utility scripts
+2. Create solution in the appropriate day directory
+3. Test with examples before running on full input
+4. Submit answers using `aoc.swift submit`
+5. Organize all day-specific files in `day<XX>/` directory
+
+### Code Style:
+- Use Swift best practices
+- Include error handling for file I/O and parsing
+- Add comments for complex logic
+- Use descriptive variable names
+- Test scripts should verify against puzzle examples
+
+### Important Notes:
+- Session cookie is hardcoded in utility scripts (see METHODOLOGY.md for refresh instructions)
+- All scripts use relative paths - run from correct directory
+- Solutions expect input files in same directory
+- Day numbers are zero-padded (day01, day02, etc.)
+
+### When Creating Solutions:
+- Always read the puzzle description first (`day<XX>.html`)
+- Create test files to verify logic with examples
+- Handle edge cases (empty input, invalid formats, etc.)
+- Part 2 often builds on Part 1 - look for patterns
+
+### Git Workflow:
+- Commit each day's solution together
+- Use descriptive commit messages
+- Keep utility scripts in root, day files in day directories
+
+## Common Patterns
+
+### File Reading:
+```swift
+guard let content = try? String(contentsOfFile: "input.txt", encoding: .utf8) else {
+    print("Error: Could not read input.txt")
+    exit(1)
+}
+```
+
+### Input Parsing:
+```swift
+let lines = content.trimmingCharacters(in: .whitespacesAndNewlines)
+    .components(separatedBy: .newlines)
+    .filter { !$0.isEmpty }
+```
+
+### Error Handling:
+- Validate input format
+- Provide clear error messages
+- Handle network errors gracefully
+- Check for edge cases
+
+## Agent Task Instructions
+
+When working as an agent:
+1. Always check current directory - scripts use relative paths
+2. Use `required_permissions: ['all']` for Swift compilation
+3. Test solutions with examples before submitting
+4. Follow the workflow in METHODOLOGY.md
+5. Organize files properly before committing
+
+## References
+- See `METHODOLOGY.md` for detailed documentation
+- See `QUICK_START.md` for quick command reference

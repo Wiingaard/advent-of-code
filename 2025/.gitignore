@@ -1,0 +1,32 @@
+# Swift build artifacts
+.build/
+*.swiftmodule
+*.swiftdoc
+*.swiftsourceinfo
+
+# Xcode
+.DS_Store
+*.xcodeproj
+*.xcworkspace
+xcuserdata/
+
+# Temporary files
+*.swp
+*.swo
+*~
+.cache/
+
+# Swift Package Manager
+.swiftpm/
+.build/
+
+# Cursor
+.cursor/
+
+# Session cookies (if extracted to separate file)
+.session
+*.session
+
+# Test outputs
+*.out
+*.log
