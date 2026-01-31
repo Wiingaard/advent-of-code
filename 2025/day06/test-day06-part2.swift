@@ -1,0 +1,90 @@
+#!/usr/bin/env swift
+
+import Foundation
+
+let example = """
+123 328  51 64
+ 45 64  387 23
+  6 98  215 314
+*   +   *   +
+"""
+
+var lines = example.components(separatedBy: .newlines)
+while let last = lines.last, last.isEmpty {
+    lines.removeLast()
+}
+
+let maxLen = lines.map { $0.count }.max() ?? 0
+var grid: [[Character]] = []
+for line in lines {
+    var chars = Array(line)
+    if chars.count < maxLen {
+        chars += Array(repeating: " ", count: maxLen - chars.count)
+    }
+    grid.append(chars)
+}
+
+let rowCount = grid.count
+let opRow = rowCount - 1
+
+var isSeparator = Array(repeating: true, count: maxLen)
+for col in 0..<maxLen {
+    for row in 0..<rowCount {
+        if grid[row][col] != " " {
+            isSeparator[col] = false
+            break
+        }
+    }
+}
+
+var ranges: [(Int, Int)] = []
+var start: Int? = nil
+for col in 0..<maxLen {
+    if !isSeparator[col] {
+        if start == nil { start = col }
+    } else if let s = start {
+        ranges.append((s, col - 1))
+        start = nil
+    }
+}
+if let s = start {
+    ranges.append((s, maxLen - 1))
+}
+
+var total: Int64 = 0
+for (startCol, endCol) in ranges {
+    var op: Character? = nil
+    for col in startCol...endCol {
+        let ch = grid[opRow][col]
+        if ch == "+" || ch == "*" {
+            op = ch
+            break
+        }
+    }
+    guard let operation = op else { continue }
+
+    var numbers: [Int64] = []
+    for col in stride(from: endCol, through: startCol, by: -1) {
+        var digits: [Character] = []
+        for row in 0..<opRow {
+            let ch = grid[row][col]
+            if ch.isNumber {
+                digits.append(ch)
+            }
+        }
+        if !digits.isEmpty, let value = Int64(String(digits)) {
+            numbers.append(value)
+        }
+    }
+
+    var result: Int64 = (operation == "+") ? 0 : 1
+    if operation == "+" {
+        for value in numbers { result += value }
+    } else {
+        for value in numbers { result *= value }
+    }
+
+    total += result
+}
+
+print("Expected: 3263827, Got: \(total)")
